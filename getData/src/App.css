@@ -1,0 +1,128 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  user-select: none;
+  font-family: "Google Sans", "Roboto", sans-serif;
+}
+.main-box {
+  /* width: 80%; */
+  height: 1000px;
+  /* border: 1px solid greenyellow; */
+  /* background-color: #131314; */
+  background-color: #2a2a31;
+  color: #e3e3e3;
+  padding: 8px 16px;
+}
+.main-box-main-heading {
+  font-size: 2rem;
+  cursor: pointer;
+  /* font-weight: 700; */
+}
+.main-box-heading {
+  display: flex;
+  border-bottom: 2px solid #717171;
+  border-bottom: 1px solid #616161;
+  padding: 10px 0px;
+  /* margin-bottom: 8px; */
+  font-size: 0.9rem;
+  font-weight: bold;
+  align-items: center;
+}
+.main-box-heading > .name {
+  display: flex;
+  /* width: 52%; */
+  flex: 3;
+  align-items: center;
+}
+.main-box-heading > .owner {
+  /* width: 21.5%; */
+  flex: 1;
+  color: #c4c7c5;
+}
+.main-box-heading > .date {
+  flex: 1;
+  color: #c4c7c5;
+}
+.main-box-heading > .size {
+  flex: 1;
+  color: #c4c7c5;
+}
+.main-box-listing {
+  display: flex;
+  border-bottom: 1px solid #616161;
+  padding: 10px 0px;
+  align-items: center;
+  transition: all ease-in 0.1s;
+  text-overflow: ellipsis;
+  font-size: 0.875rem;
+}
+.main-box-listing:hover {
+  background-color: #71717150;
+  /* cursor: pointer; */
+  padding: 16px 8px;
+}
+.sort-btn {
+  background-color: #717171;
+  border-radius: 16px;
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sort-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+.sort-btn :hover {
+  cursor: pointer;
+}
+.rotate-btn {
+  transition: all ease 0.2s;
+  transform: rotate(360deg);
+}
+.rotate-btn-2 {
+  transition: all ease 0.2s;
+  transform: rotate(180deg);
+}
+.user-img {
+  width: 24px;
+  height: 24px;
+  padding-right: 8px;
+}
+.user-box {
+  display: flex;
+  align-items: center;
+  color: #c4c7c5;
+  flex: 1;
+}
+.name-box {
+  display: flex;
+  flex: 3;
+  align-items: center;
+}
+.name-box > .name {
+  font-weight: 700;
+  color: #c4c7c5;
+}
+.extension-img {
+  width: 24px;
+  padding-right: 16px;
+}
+.date-box {
+  flex: 1;
+  color: #c4c7c5;
+}
+.size-box {
+  flex: 1;
+  color: #c4c7c5;
+}
+.ending-tag {
+  display: flex;
+  /* justify-content: center; */
+  color: #c4c7c5;
+  font-size: 0.875rem;
+  padding-top: 8px;
+}

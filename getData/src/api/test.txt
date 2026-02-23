@@ -1,0 +1,113 @@
+Hi [Name],
+
+Thank you for the security review and feedback.
+
+To address the concerns around app-only access in the live tenant, I propose switching to a **delegated access model** using Microsoft Graph. This approach:
+
+• Requires user login (no client secret)
+• Ensures access is limited to content each user already has permission to view
+• Provides full auditability via user identity
+• Reduces risk compared to app-only access
+
+If this approach is acceptable, I would need the app registration configured with delegated permissions:
+
+* Sites.Read.All
+* Files.Read.All
+
+and the following details shared:
+
+* Client ID
+* Tenant ID
+
+Please let me know if this aligns with security guidelines or if you recommend an alternative approach.
+
+Thanks,
+Utkarsh
+
+
+
+
+
+App Registration → API Permissions → Add permission → Microsoft Graph → Delegated permissions → select:
+
+Sites.Read.All
+Files.Read.All
+
+
+
+I'm building a POC React app that needs to fetch files from SharePoint via Microsoft Graph API. I've created a test SharePoint site.
+Register an Azure App with these settings:
+Name: sharepoint-ams-poc-app (or similar)
+Redirect : http://localhost:5173
+Then share the clientId and tenantId with me
+Grant Admin Consent for:
+Permission: Sites.Selected
+Link the app to my site (Graph API call):
+   First get site ID:   GET https://graph.microsoft.com/v1.0/sites/adrosonic.sharepoint.com:/sites/sharepointPoc   
+
+   Then POST:   POST https://graph.microsoft.com/v1.0/sites/{site-id-from-above}/permissions   Body: {     "roles": ["read"],     "grantedToIdentities": [{       "application": {         "id": "{clientId-from-step-1}",         "displayName": "sharepoint-ams-poc-app"       }     }]   }
+My SharePoint Site: https://adrosonic.sharepoint.com/sites/sharepointAmsPoc
+
+site-id : 5f884b06-e774-48a8-a81b-b8f257cd1dae
+
+
+
+
+
+When the IT team is creating the app in the **Azure Portal (Entra ID)**, they need to follow these specific steps to ensure your frontend can "talk" to the SharePoint site.
+
+You can literally copy and paste this list to them.
+
+---
+
+## 1. Create the App Registration
+
+* **Navigation:** Go to **App Registrations** > **New Registration**.
+* **Name:** Give it a clear name (e.g., `SharePoint-Frontend-App`).
+* **Account Types:** Select **"Accounts in this organizational directory only"** (Single Tenant).
+
+## 2. Configure the Redirect URI (Crucial for Frontend)
+
+Since you are building a frontend (like React, Angular, or Vue), they **must** set this correctly or you'll get login errors.
+
+* **Platform:** Click "Add a platform" and select **Single-page application (SPA)**.
+* **URL:** * For your local development: `http://localhost:3000` (or whatever port you use).
+* For production: The URL where the site will be hosted (e.g., `https://adrosonic.sharepoint.com/sites/YourApp`).
+
+
+
+## 3. Set API Permissions (The "Sites.Selected" Part)
+
+This is where they give the app the *potential* to see a site.
+
+* Go to **API Permissions** > **Add a permission**.
+* Select **Microsoft Graph**.
+* Select **Application Permissions**.
+* Search for and check **`Sites.Selected`**.
+* **Admin Consent:** They **must** click the button that says **"Grant admin consent for [Company Name]"**. If they don't, the app will have 0 permissions.
+
+## 4. Authentication Settings
+
+Under the **Authentication** tab:
+
+* Ensure **Access tokens** and **ID tokens** are checked under the "Implicit grant and hybrid flows" section if you aren't using the newer Auth Code Flow with PKCE (though MSAL.js usually handles the modern flow automatically).
+
+---
+
+### Summary Checklist for your IT Team
+
+> **"Please provide me with the following from the Azure Portal:"**
+> 1. **Application (client) ID:** (e.g., `da98...`)
+> 2. **Directory (tenant) ID:** (e.g., `72f9...`)
+> 3. **Confirmation:** "Have you granted **Admin Consent** for the `Sites.Selected` permission?"
+> 4. **Confirmation:** "Have you added `http://localhost:3000` as a **Single-page application (SPA)** Redirect URI?"
+> 
+> 
+
+---
+
+### The Final "Link"
+
+Once they do the above, the app exists but it **still can't see your site**. They must finish by doing that **POST request** we discussed earlier to link your **Client ID** to that **Site ID** (`5f884b06-e774-48a8-a81b-b8f257cd1dae`).
+
+**Shall I give you the final React/JavaScript code you'll use to actually sign in once they give you these IDs?**
