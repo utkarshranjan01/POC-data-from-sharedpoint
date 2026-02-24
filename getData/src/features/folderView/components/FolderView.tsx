@@ -13,7 +13,7 @@ const FolderView = () => {
 
   const [navStack, setNavStack] = useState<navigator[]>([]);
 
-  const { folderId } = useParams();
+  const { "*": folderId } = useParams();
   const navigate = useNavigate();
 
   const { handleSort } = useHandleSort({
@@ -37,11 +37,21 @@ const FolderView = () => {
       setFolderItems([]);
       setFileItems([]);
 
-      navigate(`/folder/${value.id}`);
+      navigate(`${location.pathname}/${value.id}`);
     }
   };
 
   useEffect(() => {
+    // This  below logic is to remove things from navStack in relation to url but not useful during api calls mostly so might remove in that else could cause issues
+    const fId = Number(folderId?.split("/").filter(Boolean).at(-1));
+
+    if (fId !== navStack.at(-1)?.id) {
+      setNavStack((t) => {
+        const index = t.findIndex((it) => it.id === fId);
+        return t.slice(0, index + 1);
+      });
+    }
+
     let [folders, files] = useGenerateFolderItems();
     if (navStack.length) {
       folders = navStack.at(-1)?.folders!!;
@@ -63,8 +73,8 @@ const FolderView = () => {
 
     setFileItems(files.sort((a, b) => a.name.localeCompare(b.name)));
     setFolderItems(folders.sort((a, b) => a.name.localeCompare(b.name)));
-    console.log(navStack);
-  }, [navStack]);
+    // console.log(navStack);
+  }, [folderId]);
 
   return (
     <>

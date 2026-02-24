@@ -29,7 +29,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<FolderView />} />
-        <Route path="/folder/:folderId" element={<FolderView />} />
+        <Route path="/*" element={<FolderView />} />
       </Routes>
       <button onClick={handleClick}>Get Data</button>
       <br />
