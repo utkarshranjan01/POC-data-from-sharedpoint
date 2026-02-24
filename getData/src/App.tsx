@@ -3,6 +3,7 @@ import "./App.css";
 import type { Photo } from "./app/types";
 import api from "./api/api";
 import FolderView from "./features/folderView/components/FolderView";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   const [click, setClick] = useState(false);
@@ -26,7 +27,10 @@ function App() {
 
   return (
     <>
-      <FolderView></FolderView>
+      <Routes>
+        <Route path="/" element={<FolderView />} />
+        <Route path="/folder/:folderId" element={<FolderView />} />
+      </Routes>
       <button onClick={handleClick}>Get Data</button>
       <br />
       {click && photo && <img src={photo.picture.large} alt="test image" />}

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import EachItem from "./EachItem";
 import { useGenerateFolderItems } from "../../../hooks/useGenerateFolderItems";
 import type { Items, navigator } from "../../../app/types";
+import Breadcrumbs from "./Breadcrumbs";
+import { useHandleSort } from "../../../hooks/useHandleSort";
+import { useNavigate, useParams } from "react-router-dom";
 
 const FolderView = () => {
   const [sortBtn, setSortBtn] = useState(false);
@@ -10,27 +13,14 @@ const FolderView = () => {
 
   const [navStack, setNavStack] = useState<navigator[]>([]);
 
-  const handleSort = () => {
-    setSortBtn((t) => {
-      if (t) {
-        setFileItems((t) =>
-          [...t].sort((a, b) => a.name.localeCompare(b.name)),
-        );
-        setFolderItems((t) =>
-          [...t].sort((a, b) => a.name.localeCompare(b.name)),
-        );
-      } else {
-        setFileItems((t) =>
-          [...t].sort((a, b) => b.name.localeCompare(a.name)),
-        );
-        setFolderItems((t) =>
-          [...t].sort((a, b) => b.name.localeCompare(a.name)),
-        );
-      }
+  const { folderId } = useParams();
+  const navigate = useNavigate();
 
-      return !t;
-    });
-  };
+  const { handleSort } = useHandleSort({
+    setSortBtn,
+    setFolderItems,
+    setFileItems,
+  });
 
   const itemCick = (value: Items) => {
     if (value.isFolder) {
@@ -46,14 +36,9 @@ const FolderView = () => {
       ]);
       setFolderItems([]);
       setFileItems([]);
-    }
-  };
 
-  const handleBackClick = (id: number) => {
-    setNavStack((t) => {
-      let index = t.findIndex((it) => it.id === id);
-      return t.slice(0, index + 1);
-    });
+      navigate(`/folder/${value.id}`);
+    }
   };
 
   useEffect(() => {
@@ -71,6 +56,11 @@ const FolderView = () => {
         } as unknown as navigator,
       ]);
     }
+    // if (folderId !== navStack.at(-1)?.id) {
+    //   if (navStack.length === 1) navigate("/");
+    //   else navigate(`/folder/${navStack.at(-1)?.id}`);
+    // }
+
     setFileItems(files.sort((a, b) => a.name.localeCompare(b.name)));
     setFolderItems(folders.sort((a, b) => a.name.localeCompare(b.name)));
     console.log(navStack);
@@ -79,20 +69,8 @@ const FolderView = () => {
   return (
     <>
       <div className="main-box">
-        <div className="main-box-main-heading">
-          {navStack.length > 0 &&
-            navStack.map((value, index) =>
-              index > 0 ? (
-                <span onClick={() => handleBackClick(value.id)}>
-                  {" >"} {value.name}
-                </span>
-              ) : (
-                <span onClick={() => handleBackClick(value.id)}>
-                  {value.name}
-                </span>
-              ),
-            )}
-        </div>
+        <Breadcrumbs navStack={navStack} setNavStack={setNavStack} />
+
         <div className="main-box-heading">
           <div className="name">
             <span>Name</span>
